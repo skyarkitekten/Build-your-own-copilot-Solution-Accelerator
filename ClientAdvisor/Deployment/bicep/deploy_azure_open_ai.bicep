@@ -43,9 +43,9 @@ resource accounts_byc_openai_name_resource 'Microsoft.CognitiveServices/accounts
 //   dependsOn:[accounts_byc_openai_name_resource]
 // }
 
-resource accounts_byc_openai_name_gpt_4 'Microsoft.CognitiveServices/accounts/deployments@2023-05-01' = {
+resource accounts_byc_openai_name_gpt_4o 'Microsoft.CognitiveServices/accounts/deployments@2023-05-01' = {
   parent: accounts_byc_openai_name_resource
-  name: 'gpt-4'
+  name: 'gpt-4o'
   sku: {
     name: 'Standard'
     capacity: 10
@@ -53,7 +53,7 @@ resource accounts_byc_openai_name_gpt_4 'Microsoft.CognitiveServices/accounts/de
   properties: {
     model: {
       format: 'OpenAI'
-      name: 'gpt-4'
+      name: 'gpt-4o'
       version: '0125-Preview'
     }
     versionUpgradeOption: 'OnceCurrentVersionExpired'
@@ -77,7 +77,7 @@ resource accounts_byc_openai_name_text_embedding_ada_002 'Microsoft.CognitiveSer
     versionUpgradeOption: 'OnceNewDefaultVersionAvailable'
     raiPolicyName: 'Microsoft.Default'
   }
-  dependsOn:[accounts_byc_openai_name_gpt_4]
+  dependsOn:[accounts_byc_openai_name_gpt_4o]
 }
 
 var openaiKey = accounts_byc_openai_name_resource.listKeys().key1
