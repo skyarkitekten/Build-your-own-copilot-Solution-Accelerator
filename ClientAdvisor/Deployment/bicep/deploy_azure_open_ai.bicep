@@ -4,7 +4,7 @@
 param solutionName string
 param solutionLocation string
 
-param accounts_byc_openai_name string = '${ solutionName }-openai'
+param accounts_byc_openai_name string = '${solutionName }-openai'
 
 resource accounts_byc_openai_name_resource 'Microsoft.CognitiveServices/accounts@2023-05-01' = {
   name: accounts_byc_openai_name
@@ -54,7 +54,7 @@ resource accounts_byc_openai_name_gpt_4o 'Microsoft.CognitiveServices/accounts/d
     model: {
       format: 'OpenAI'
       name: 'gpt-4o'
-      version: '0125-Preview'
+      version: '2024-08-06'
     }
     versionUpgradeOption: 'OnceCurrentVersionExpired'
     raiPolicyName: 'Microsoft.Default'
@@ -77,14 +77,14 @@ resource accounts_byc_openai_name_text_embedding_ada_002 'Microsoft.CognitiveSer
     versionUpgradeOption: 'OnceNewDefaultVersionAvailable'
     raiPolicyName: 'Microsoft.Default'
   }
-  dependsOn:[accounts_byc_openai_name_gpt_4o]
+  dependsOn: [accounts_byc_openai_name_gpt_4o]
 }
 
 var openaiKey = accounts_byc_openai_name_resource.listKeys().key1
 
 output openAIOutput object = {
-openAPIKey : openaiKey
-openAPIVersion:accounts_byc_openai_name_resource.apiVersion
-openAPIEndpoint: accounts_byc_openai_name_resource.properties.endpoint
-openAIAccountName:accounts_byc_openai_name
+  openAPIKey: openaiKey
+  openAPIVersion: accounts_byc_openai_name_resource.apiVersion
+  openAPIEndpoint: accounts_byc_openai_name_resource.properties.endpoint
+  openAIAccountName: accounts_byc_openai_name
 }
