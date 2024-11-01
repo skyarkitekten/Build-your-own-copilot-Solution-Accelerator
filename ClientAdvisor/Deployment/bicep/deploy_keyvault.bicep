@@ -12,7 +12,7 @@ param solutionLocation string
 param utc string = utcNow()
 
 @description('Name')
-param kvName string = '${ solutionName }-kv-${uniqueString(utc)}'
+param kvName string = 'kv-${uniqueString(utc)}'
 
 @description('Object Id. The object ID of a user, service principal or security group in the Azure Active Directory tenant for the vault.')
 param objectId string
@@ -59,7 +59,7 @@ param sku string = 'standard'
 param tenantId string
 
 @description('Vault URI. The URI of the vault for performing operations on keys and secrets.')
-var vaultUri = 'https://${ kvName }.vault.azure.net/'
+var vaultUri = 'https://${kvName }.vault.azure.net/'
 
 param managedIdentityObjectId string
 
@@ -99,8 +99,8 @@ resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' = {
   }
   properties: {
     accessPolicies: [
-      {        
-        objectId: objectId        
+      {
+        objectId: objectId
         permissions: {
           certificates: [
             'all'
@@ -131,7 +131,7 @@ resource keyVault 'Microsoft.KeyVault/vaults@2022-07-01' = {
     sku: {
       family: 'A'
       name: sku
-    }    
+    }
     tenantId: tenantId
     vaultUri: vaultUri
   }
@@ -147,43 +147,10 @@ resource roleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   name: guid(resourceGroup().id, managedIdentityObjectId, kvAdminRole.id)
   properties: {
     principalId: managedIdentityObjectId
-    roleDefinitionId:kvAdminRole.id
-    principalType: 'ServicePrincipal' 
+    roleDefinitionId: kvAdminRole.id
+    principalType: 'ServicePrincipal'
   }
 }
-
-
-// resource clientIdEntry 'Microsoft.KeyVault/vaults/secrets@2021-11-01-preview' = {
-//   parent: keyVault
-//   name: 'SPN-CLIENTID'
-//   properties: {
-//     value: clientId
-//   }
-// }
-
-// resource clientSecretEntry 'Microsoft.KeyVault/vaults/secrets@2021-11-01-preview' = {
-//   parent: keyVault
-//   name: 'SPN-CLIENTSECRET'
-//   properties: {
-//     value: clientSecret
-//   }
-// }
-
-// resource environmentUrlEntry 'Microsoft.KeyVault/vaults/secrets@2021-11-01-preview' = {
-//   parent: keyVault
-//   name: 'ENVIRONMENT-URL'
-//   properties: {
-//     value: environmentUrl
-//   }
-// }
-
-// resource environmentIdEntry 'Microsoft.KeyVault/vaults/secrets@2021-11-01-preview' = {
-//   parent: keyVault
-//   name: 'ENVIRONMENT-ID'
-//   properties: {
-//     value: environmentId
-//   }
-// }
 
 resource tenantIdEntry 'Microsoft.KeyVault/vaults/secrets@2021-11-01-preview' = {
   parent: keyVault
@@ -208,7 +175,6 @@ resource adlsAccountKeyEntry 'Microsoft.KeyVault/vaults/secrets@2021-11-01-previ
     value: adlsAccountKey
   }
 }
-
 
 resource azureOpenAIApiKeyEntry 'Microsoft.KeyVault/vaults/secrets@2021-11-01-preview' = {
   parent: keyVault
@@ -350,5 +316,5 @@ output keyvaultOutput object = {
   id: keyVault.id
   name: kvName
   uri: vaultUri
-  resource:keyVault
+  resource: keyVault
 }
