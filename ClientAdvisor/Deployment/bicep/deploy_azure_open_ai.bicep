@@ -4,7 +4,7 @@
 param solutionName string
 param solutionLocation string
 
-param accounts_byc_openai_name string = '${ solutionName }-openai'
+param accounts_byc_openai_name string = '${solutionName }-openai'
 
 resource accounts_byc_openai_name_resource 'Microsoft.CognitiveServices/accounts@2023-05-01' = {
   name: accounts_byc_openai_name
@@ -24,25 +24,6 @@ resource accounts_byc_openai_name_resource 'Microsoft.CognitiveServices/accounts
   }
 }
 
-// resource accounts_byc_openai_name_gpt_35_turbo 'Microsoft.CognitiveServices/accounts/deployments@2023-05-01' = {
-//   parent: accounts_byc_openai_name_resource
-//   name: 'gpt-35-turbo-16k'
-//   sku: {
-//     name: 'Standard'
-//     capacity: 30
-//   }
-//   properties: {
-//     model: {
-//       format: 'OpenAI'
-//       name: 'gpt-35-turbo-16k'
-//       version: '0613'
-//     }
-//     versionUpgradeOption: 'OnceNewDefaultVersionAvailable'
-//     raiPolicyName: 'Microsoft.Default'
-//   }
-//   dependsOn:[accounts_byc_openai_name_resource]
-// }
-
 resource accounts_byc_openai_name_gpt_4 'Microsoft.CognitiveServices/accounts/deployments@2023-05-01' = {
   parent: accounts_byc_openai_name_resource
   name: 'gpt-4'
@@ -54,7 +35,7 @@ resource accounts_byc_openai_name_gpt_4 'Microsoft.CognitiveServices/accounts/de
     model: {
       format: 'OpenAI'
       name: 'gpt-4'
-      version: '0125-Preview'
+      version: 'turbo-2024-04-09'
     }
     versionUpgradeOption: 'OnceCurrentVersionExpired'
     raiPolicyName: 'Microsoft.Default'
@@ -77,14 +58,14 @@ resource accounts_byc_openai_name_text_embedding_ada_002 'Microsoft.CognitiveSer
     versionUpgradeOption: 'OnceNewDefaultVersionAvailable'
     raiPolicyName: 'Microsoft.Default'
   }
-  dependsOn:[accounts_byc_openai_name_gpt_4]
+  dependsOn: [accounts_byc_openai_name_gpt_4]
 }
 
 var openaiKey = accounts_byc_openai_name_resource.listKeys().key1
 
 output openAIOutput object = {
-openAPIKey : openaiKey
-openAPIVersion:accounts_byc_openai_name_resource.apiVersion
-openAPIEndpoint: accounts_byc_openai_name_resource.properties.endpoint
-openAIAccountName:accounts_byc_openai_name
+  openAPIKey: openaiKey
+  openAPIVersion: accounts_byc_openai_name_resource.apiVersion
+  openAPIEndpoint: accounts_byc_openai_name_resource.properties.endpoint
+  openAIAccountName: accounts_byc_openai_name
 }
